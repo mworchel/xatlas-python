@@ -1,6 +1,6 @@
 # Python bindings for xatlas
 
-(Unofficial) Python bindings for [xatlas](https://github.com/jpcy/xatlas), a library for generating texture coordinates for triangle meshes.
+(Unofficial) Python bindings for [xatlas](https://github.com/jpcy/xatlas), a library that generates texture coordinates for triangle meshes.
 
 ## Installation
 
