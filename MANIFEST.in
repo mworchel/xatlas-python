@@ -1,0 +1,6 @@
+include README.md LICENSE extern/pybind11/LICENSE extern/xatlas/LICENSE
+graft extern/pybind11/include
+graft extern/pybind11/tools
+graft extern/xatlas/source/xatlas
+graft src
+global-include CMakeLists.txt *.cmake
