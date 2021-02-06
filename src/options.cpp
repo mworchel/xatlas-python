@@ -47,21 +47,21 @@ void ChartOptions::bind(py::module& m)
 
 void PackOptions::bind(pybind11::module& m)
 {
-	py::class_<xatlas::PackOptions>(m, "PackOptions")
-		.def(py::init<>())
-		.def_readwrite("max_chart_size", &xatlas::PackOptions::maxChartSize, "Charts larger than this will be scaled down. 0 means no limit.")
-	    .def_readwrite("padding", &xatlas::PackOptions::padding, "Number of pixels to pad charts with.")
-	    .def_readwrite("texels_per_unit", &xatlas::PackOptions::texelsPerUnit, R"doc(Unit to texel scale. e.g. a 1x1 quad with texelsPerUnit of 32 will take up approximately 32x32 texels in the atlas.
+    py::class_<xatlas::PackOptions>(m, "PackOptions")
+        .def(py::init<>())
+        .def_readwrite("max_chart_size", &xatlas::PackOptions::maxChartSize, "Charts larger than this will be scaled down. 0 means no limit.")
+        .def_readwrite("padding", &xatlas::PackOptions::padding, "Number of pixels to pad charts with.")
+        .def_readwrite("texels_per_unit", &xatlas::PackOptions::texelsPerUnit, R"doc(Unit to texel scale. e.g. a 1x1 quad with texelsPerUnit of 32 will take up approximately 32x32 texels in the atlas.
     If 0, an estimated value will be calculated to approximately match the given resolution.
     If resolution is also 0, the estimated value will approximately match a 1024x1024 atlas.
 	    )doc")
-	    .def_readwrite("resolution", &xatlas::PackOptions::resolution, R"doc(If 0, generate a single atlas with texelsPerUnit determining the final resolution. 
+        .def_readwrite("resolution", &xatlas::PackOptions::resolution, R"doc(If 0, generate a single atlas with texelsPerUnit determining the final resolution. 
     If not 0, and texelsPerUnit is not 0, generate one or more atlases with that exact resolution. 
     If not 0, and texelsPerUnit is 0, texelsPerUnit is estimated to approximately match the resolution.)doc")
-	    .def_readwrite("bilinear", &xatlas::PackOptions::bilinear, "Leave space around charts for texels that would be sampled by bilinear filtering.")
-	    .def_readwrite("blockAlign", &xatlas::PackOptions::blockAlign, "Align charts to 4x4 blocks. Also improves packing speed, since there are fewer possible chart locations to consider.")
-	    .def_readwrite("bruteForce", &xatlas::PackOptions::bruteForce, "Slower, but gives the best result. If false, use random chart placement.")
-	    .def_readwrite("create_image", &xatlas::PackOptions::createImage, "Create Atlas::image.")
-	    .def_readwrite("rotate_charts_to_a-xis", &xatlas::PackOptions::rotateChartsToAxis, "Rotate charts to the axis of their convex hull.")
-	    .def_readwrite("rotate_charts", &xatlas::PackOptions::rotateCharts, "Rotate charts to improve packing.");
+        .def_readwrite("bilinear", &xatlas::PackOptions::bilinear, "Leave space around charts for texels that would be sampled by bilinear filtering.")
+        .def_readwrite("blockAlign", &xatlas::PackOptions::blockAlign, "Align charts to 4x4 blocks. Also improves packing speed, since there are fewer possible chart locations to consider.")
+        .def_readwrite("bruteForce", &xatlas::PackOptions::bruteForce, "Slower, but gives the best result. If false, use random chart placement.")
+        .def_readwrite("create_image", &xatlas::PackOptions::createImage, "Create Atlas::image.")
+        .def_readwrite("rotate_charts_to_a-xis", &xatlas::PackOptions::rotateChartsToAxis, "Rotate charts to the axis of their convex hull.")
+        .def_readwrite("rotate_charts", &xatlas::PackOptions::rotateCharts, "Rotate charts to improve packing.");
 }

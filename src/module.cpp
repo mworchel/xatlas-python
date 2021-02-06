@@ -32,17 +32,19 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
-#include <pybind11/pybind11.h>
+
 #include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+
 #include <xatlas.h>
 
 namespace py = pybind11;
 
-auto parametrize(ContiguousArray<float> const& positions,
+auto parametrize(ContiguousArray<float> const&         positions,
                  ContiguousArray<std::uint32_t> const& indices,
                  std::optional<ContiguousArray<float>> normals = std::nullopt,
-                 std::optional<ContiguousArray<float>> uvs = std::nullopt)
+                 std::optional<ContiguousArray<float>> uvs     = std::nullopt)
 {
     Atlas atlas;
     atlas.addMesh(positions, indices, normals, uvs);
@@ -50,17 +52,26 @@ auto parametrize(ContiguousArray<float> const& positions,
     return atlas.getMesh(0);
 }
 
-void exportObj(std::string const& path, 
-               ContiguousArray<float> const& positions, 
+void exportObj(std::string const&                            path,
+               ContiguousArray<float> const&                 positions,
                std::optional<ContiguousArray<std::uint32_t>> indices = std::nullopt,
-               std::optional<ContiguousArray<float>> uvs = std::nullopt, 
-               std::optional<ContiguousArray<float>> normals = std::nullopt)
+               std::optional<ContiguousArray<float>>         uvs     = std::nullopt,
+               std::optional<ContiguousArray<float>>         normals = std::nullopt)
 {
     // Perform sanity checks on the inputs
     checkShape("Position", positions, 3);
-    if (indices) { checkShape("Index" , *indices, 3); }
-    if (normals) { checkShape("Normal", *normals, 3, positions.shape()[0]); }
-    if (uvs) { checkShape("Texture coordinates", *uvs, 2, positions.shape()[0]); }
+    if (indices)
+    {
+        checkShape("Index", *indices, 3);
+    }
+    if (normals)
+    {
+        checkShape("Normal", *normals, 3, positions.shape()[0]);
+    }
+    if (uvs)
+    {
+        checkShape("Texture coordinates", *uvs, 2, positions.shape()[0]);
+    }
 
     std::ofstream file(path);
 
@@ -114,7 +125,8 @@ void exportObj(std::string const& path,
         }
 
         // Write the faces
-        for (py::ssize_t f = 0; f < (*indices).shape()[0]; ++f) {
+        for (py::ssize_t f = 0; f < (*indices).shape()[0]; ++f)
+        {
             std::uint32_t const* face = (*indices).data(f, 0);
 
             file << "f " << formatFace(static_cast<size_t>(face[0]) + 1) << " " << formatFace(static_cast<size_t>(face[1]) + 1) << " " << formatFace(static_cast<size_t>(face[2]) + 1) << std::endl;
@@ -122,7 +134,8 @@ void exportObj(std::string const& path,
     }
 }
 
-PYBIND11_MODULE(xatlas, m) {
+PYBIND11_MODULE(xatlas, m)
+{
     // Bindings
     ChartOptions::bind(m);
     PackOptions::bind(m);

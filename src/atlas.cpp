@@ -39,37 +39,43 @@ Atlas::~Atlas()
     xatlas::Destroy(m_atlas);
 }
 
-void Atlas::addMesh(ContiguousArray<float> const& positions,
-                      ContiguousArray<std::uint32_t> const& indices,
-                      std::optional<ContiguousArray<float>> normals,
-                      std::optional<ContiguousArray<float>> uvs)
+void Atlas::addMesh(ContiguousArray<float> const&         positions,
+                    ContiguousArray<std::uint32_t> const& indices,
+                    std::optional<ContiguousArray<float>> normals,
+                    std::optional<ContiguousArray<float>> uvs)
 {
     // Perform sanity checks on the inputs
     checkShape("Position", positions, 3);
     checkShape("Index", indices, 3);
-    if (normals) { checkShape("Normal", *normals, 3, positions.shape()[0]); }
-    if (uvs) { checkShape("Texture coordinates", *uvs, 2, positions.shape()[0]); }
+    if (normals)
+    {
+        checkShape("Normal", *normals, 3, positions.shape()[0]);
+    }
+    if (uvs)
+    {
+        checkShape("Texture coordinates", *uvs, 2, positions.shape()[0]);
+    }
 
     // Fill the mesh declaration
     xatlas::MeshDecl meshDecl;
 
-    meshDecl.vertexCount = static_cast<std::uint32_t>(positions.shape()[0]);
-    meshDecl.vertexPositionData = positions.data();
+    meshDecl.vertexCount          = static_cast<std::uint32_t>(positions.shape()[0]);
+    meshDecl.vertexPositionData   = positions.data();
     meshDecl.vertexPositionStride = sizeof(float) * 3; // X, Y, Z
 
-    meshDecl.indexCount = static_cast<std::uint32_t>(indices.size());
-    meshDecl.indexData = indices.data();
+    meshDecl.indexCount  = static_cast<std::uint32_t>(indices.size());
+    meshDecl.indexData   = indices.data();
     meshDecl.indexFormat = xatlas::IndexFormat::UInt32;
 
     if (normals)
     {
-        meshDecl.vertexNormalData = normals->data();
+        meshDecl.vertexNormalData   = normals->data();
         meshDecl.vertexNormalStride = sizeof(float) * 3;
     }
 
     if (uvs)
     {
-        meshDecl.vertexUvData = uvs->data();
+        meshDecl.vertexUvData   = uvs->data();
         meshDecl.vertexUvStride = sizeof(float) * 2;
     }
 
@@ -97,10 +103,11 @@ MeshResult Atlas::getMesh(std::uint32_t index)
     auto const& mesh = m_atlas->meshes[index];
 
     std::vector<std::uint32_t> vertexMappingOut(mesh.vertexCount);
-    std::vector<float> uvsOut(static_cast<size_t>(mesh.vertexCount) * 2);
+    std::vector<float>         uvsOut(static_cast<size_t>(mesh.vertexCount) * 2);
     std::vector<std::uint32_t> indicesOut(mesh.indexCount);
 
-    for (size_t v = 0; v < static_cast<size_t>(mesh.vertexCount); ++v) {
+    for (size_t v = 0; v < static_cast<size_t>(mesh.vertexCount); ++v)
+    {
         auto const& vertex = mesh.vertexArray[v];
 
         vertexMappingOut[v] = vertex.xref;
@@ -109,14 +116,15 @@ MeshResult Atlas::getMesh(std::uint32_t index)
         uvsOut[v * 2 + 1] = vertex.uv[1] / m_atlas->height;
     }
 
-    for (size_t f = 0; f < static_cast<size_t>(mesh.indexCount); ++f) {
+    for (size_t f = 0; f < static_cast<size_t>(mesh.indexCount); ++f)
+    {
         indicesOut[f] = mesh.indexArray[f];
     }
 
     return std::make_tuple(
-        ContiguousArray<std::uint32_t>(std::vector<py::ssize_t>{ mesh.vertexCount }, vertexMappingOut.data()),
-        ContiguousArray<std::uint32_t>(std::vector<py::ssize_t>{ mesh.indexCount / 3, 3 }, indicesOut.data()),
-        ContiguousArray<float>(std::vector<py::ssize_t>{ mesh.vertexCount, 2 }, uvsOut.data()));
+        ContiguousArray<std::uint32_t>(std::vector<py::ssize_t>{mesh.vertexCount}, vertexMappingOut.data()),
+        ContiguousArray<std::uint32_t>(std::vector<py::ssize_t>{mesh.indexCount / 3, 3}, indicesOut.data()),
+        ContiguousArray<float>(std::vector<py::ssize_t>{mesh.vertexCount, 2}, uvsOut.data()));
 }
 
 void Atlas::bind(py::module& m)
@@ -136,6 +144,5 @@ void Atlas::bind(py::module& m)
 
         // Convenience bindings
         .def("__len__", &Atlas::getMeshCount)
-        .def("__getitem__", &Atlas::getMesh)
-        ;
+        .def("__getitem__", &Atlas::getMesh);
 }

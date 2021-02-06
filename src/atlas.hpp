@@ -43,10 +43,10 @@ public:
 
     virtual ~Atlas();
 
-    void addMesh(ContiguousArray<float> const& positions,
+    void addMesh(ContiguousArray<float> const&         positions,
                  ContiguousArray<std::uint32_t> const& indices,
                  std::optional<ContiguousArray<float>> normals = std::nullopt,
-                 std::optional<ContiguousArray<float>> uvs = std::nullopt);
+                 std::optional<ContiguousArray<float>> uvs     = std::nullopt);
 
     void generate(xatlas::ChartOptions const& chartOptions = xatlas::ChartOptions(), xatlas::PackOptions const& packOptions = xatlas::PackOptions());
 
