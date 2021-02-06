@@ -52,41 +52,6 @@ public:
 
     MeshResult getMesh(std::uint32_t index);
 
-    auto getAtlasCount() const
-    {
-        return m_atlas->atlasCount;
-    }
-
-    auto getMeshCount() const
-    {
-        return m_atlas->meshCount;
-    }
-
-    auto getChartCount() const
-    {
-        return m_atlas->chartCount;
-    }
-
-    auto getWidth() const
-    {
-        return m_atlas->width;
-    }
-
-    auto getHeight() const
-    {
-        return m_atlas->height;
-    }
-
-    auto getTexelsPerUnit() const
-    {
-        return m_atlas->texelsPerUnit;
-    }
-
-    auto getUtilization() const
-    {
-        return m_atlas->utilization;
-    }
-
     static void bind(pybind11::module& m);
 
 private:

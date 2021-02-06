@@ -134,15 +134,15 @@ void Atlas::bind(py::module& m)
         .def("add_mesh", &Atlas::addMesh, py::arg("positions"), py::arg("indices"), py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt)
         .def("generate", &Atlas::generate, py::arg("chart_options") = xatlas::ChartOptions(), py::arg("pack_options") = xatlas::PackOptions())
         .def("get_mesh", &Atlas::getMesh)
-        .def_property_readonly("atlas_count", &Atlas::getAtlasCount)
-        .def_property_readonly("mesh_count", &Atlas::getMeshCount)
-        .def_property_readonly("chart_count", &Atlas::getChartCount)
-        .def_property_readonly("width", &Atlas::getWidth)
-        .def_property_readonly("height", &Atlas::getHeight)
-        .def_property_readonly("texels_per_unit", &Atlas::getTexelsPerUnit)
-        .def_property_readonly("utilization", &Atlas::getUtilization)
+        .def_property_readonly("atlas_count", [](Atlas const& self) { return self.m_atlas->atlasCount; })
+        .def_property_readonly("mesh_count", [](Atlas const& self) { return self.m_atlas->meshCount; })
+        .def_property_readonly("chart_count", [](Atlas const& self) { return self.m_atlas->chartCount; })
+        .def_property_readonly("width", [](Atlas const& self) { return self.m_atlas->width; })
+        .def_property_readonly("height", [](Atlas const& self) { return self.m_atlas->height; })
+        .def_property_readonly("texels_per_unit", [](Atlas const& self) { return self.m_atlas->texelsPerUnit; })
+        .def_property_readonly("utilization", [](Atlas const& self) { return self.m_atlas->utilization; })
 
         // Convenience bindings
-        .def("__len__", &Atlas::getMeshCount)
+        .def("__len__", [](Atlas const& self) { return self.m_atlas->meshCount; })
         .def("__getitem__", &Atlas::getMesh);
 }
