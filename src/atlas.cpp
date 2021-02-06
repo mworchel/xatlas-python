@@ -99,32 +99,31 @@ MeshResult Atlas::getMesh(std::uint32_t index)
         throw std::out_of_range("Mesh index " + std::to_string(index) + " out of bounds for atlas with " + std::to_string(m_atlas->meshCount) + " meshes.");
     }
 
-    // Collect the mesh
     auto const& mesh = m_atlas->meshes[index];
 
-    std::vector<std::uint32_t> vertexMappingOut(mesh.vertexCount);
-    std::vector<float>         uvsOut(static_cast<size_t>(mesh.vertexCount) * 2);
-    std::vector<std::uint32_t> indicesOut(mesh.indexCount);
+    py::array_t<std::uint32_t> vertexMapping(py::array::ShapeContainer{mesh.vertexCount});
+    py::array_t<float>         uvs(py::array::ShapeContainer{mesh.vertexCount, 2U});
 
     for (size_t v = 0; v < static_cast<size_t>(mesh.vertexCount); ++v)
     {
         auto const& vertex = mesh.vertexArray[v];
 
-        vertexMappingOut[v] = vertex.xref;
+        *(vertexMapping.mutable_data(v)) = vertex.xref;
 
-        uvsOut[v * 2 + 0] = vertex.uv[0] / m_atlas->width;
-        uvsOut[v * 2 + 1] = vertex.uv[1] / m_atlas->height;
+        *(uvs.mutable_data(v, 0)) = vertex.uv[0] / m_atlas->width;
+        *(uvs.mutable_data(v, 1)) = vertex.uv[1] / m_atlas->height;
     }
 
-    for (size_t f = 0; f < static_cast<size_t>(mesh.indexCount); ++f)
+    py::array_t<std::uint32_t> indices(py::array::ShapeContainer{mesh.indexCount / 3, 3U});
+
+    for (size_t f = 0; f < static_cast<size_t>(mesh.indexCount) / 3; ++f)
     {
-        indicesOut[f] = mesh.indexArray[f];
+        *(indices.mutable_data(f, 0)) = mesh.indexArray[f*3 + 0];
+        *(indices.mutable_data(f, 1)) = mesh.indexArray[f*3 + 1];
+        *(indices.mutable_data(f, 2)) = mesh.indexArray[f*3 + 2];
     }
 
-    return std::make_tuple(
-        ContiguousArray<std::uint32_t>(std::vector<py::ssize_t>{mesh.vertexCount}, vertexMappingOut.data()),
-        ContiguousArray<std::uint32_t>(std::vector<py::ssize_t>{mesh.indexCount / 3, 3}, indicesOut.data()),
-        ContiguousArray<float>(std::vector<py::ssize_t>{mesh.vertexCount, 2}, uvsOut.data()));
+    return std::make_tuple(vertexMapping, indices, uvs);
 }
 
 void Atlas::bind(py::module& m)
