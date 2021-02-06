@@ -31,7 +31,7 @@ mesh = trimesh.load_mesh("input.obj")
 # The parametrization potentially duplicates vertices.
 # `vmapping` contains the original vertex index for each new vertex (shape N, type uint32).
 # `indices` contains the vertex indices of the new triangles (shape Fx3, type uint32)
-# `uvs` contains texture coordinates for the new vertices (shape Nx3, type float32)
+# `uvs` contains texture coordinates for the new vertices (shape Nx2, type float32)
 vmapping, indices, uvs = xatlas.parametrize(mesh.vertices, mesh.faces)
 
 # Trimesh does not correctly export the parametrized mesh, so we 
