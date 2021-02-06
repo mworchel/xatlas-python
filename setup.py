@@ -106,9 +106,11 @@ class CMakeBuild(build_ext):
 setup(
     name="xatlas-python",
     version="0.0.1",
+    description="Python bindings for xatlas",
     author="Markus Worchel",
     author_email="m.worchel@campus.tu-berlin.de",
-    description="Python bindings for xatlas",
+    license='MIT',
+    url='https://github.com/mworchel/xatlas-python',
     long_description="",
     ext_modules=[CMakeExtension("xatlas")],
     cmdclass={"build_ext": CMakeBuild},
