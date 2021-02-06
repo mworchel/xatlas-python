@@ -1,3 +1,5 @@
+# Code adapted from https://github.com/pybind/cmake_example
+
 # -*- coding: utf-8 -*-
 import os
 import sys
