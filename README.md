@@ -35,7 +35,7 @@ mesh = trimesh.load_mesh("input.obj")
 vmapping, indices, uvs = xatlas.parametrize(mesh.vertices, mesh.faces)
 
 # Trimesh does not correctly export the parametrized mesh, so we 
-# can use the `export` helper function to write the mesh as obj.
+# can use the `export` helper function to export the mesh as obj.
 xatlas.export("output.obj", mesh.vertices[vmapping], indices, uvs)
 
 # Both `xatlas.parametrize` and `xatlas.export` also accept vertex normals
