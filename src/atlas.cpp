@@ -79,7 +79,11 @@ void Atlas::addMesh(ContiguousArray<float> const&         positions,
         meshDecl.vertexUvStride = sizeof(float) * 2;
     }
 
-    xatlas::AddMesh(m_atlas, meshDecl);
+    xatlas::AddMeshError error = xatlas::AddMesh(m_atlas, meshDecl);
+
+    if (error != xatlas::AddMeshError::Success) {
+        throw std::runtime_error("Adding mesh failed: " + std::string(xatlas::StringForEnum(error)));
+    }
 }
 
 void Atlas::generate(xatlas::ChartOptions const& chartOptions, xatlas::PackOptions const& packOptions)
