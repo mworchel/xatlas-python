@@ -14,7 +14,7 @@ pip install ./xatlas-python
 ### Using Pip
 
 ```bash
-pip install xatlas-python
+pip install xatlas
 ```
 
 ## Usage

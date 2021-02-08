@@ -104,8 +104,8 @@ class CMakeBuild(build_ext):
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
-    name="xatlas-python",
-    version="0.0.1",
+    name="xatlas",
+    version="0.0.2",
     description="Python bindings for xatlas",
     author="Markus Worchel",
     author_email="m.worchel@campus.tu-berlin.de",
