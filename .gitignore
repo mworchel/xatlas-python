@@ -2,3 +2,4 @@
 build
 xatlas_python.egg-info
 *.pyd
+*.pyc
