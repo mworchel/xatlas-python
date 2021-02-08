@@ -1,4 +1,5 @@
 .vscode
+.pytest_cache
 build
 xatlas_python.egg-info
 *.pyd
