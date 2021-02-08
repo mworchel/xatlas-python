@@ -53,7 +53,7 @@ void Atlas::addMesh(ContiguousArray<float> const&         positions,
     }
     if (uvs)
     {
-        checkShape("Texture coordinates", *uvs, 2, positions.shape(0));
+        checkShape("Texture coordinate", *uvs, 2, positions.shape(0));
     }
 
     // Fill the mesh declaration

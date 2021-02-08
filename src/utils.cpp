@@ -33,6 +33,6 @@ void checkShape(std::string const& arrayName, pybind11::array array, pybind11::s
 
     if (expectedFirstDimSize && (array.shape(0) != *expectedFirstDimSize))
     {
-        throw std::invalid_argument(arrayName + " has invalid number of elements in the first dimension (expected " + std::to_string(*expectedFirstDimSize) + ", got " + std::to_string(array.shape(0)) + ")");
+        throw std::invalid_argument(arrayName + " array has invalid number of elements in the first dimension (expected " + std::to_string(*expectedFirstDimSize) + ", got " + std::to_string(array.shape(0)) + ")");
     }
 }
