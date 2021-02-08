@@ -86,14 +86,18 @@ void Atlas::addMesh(ContiguousArray<float> const&         positions,
     }
 }
 
-void Atlas::generate(xatlas::ChartOptions const& chartOptions, xatlas::PackOptions const& packOptions)
+void Atlas::generate(xatlas::ChartOptions const& chartOptions, xatlas::PackOptions const& packOptions, bool verbose)
 {
     xatlas::Generate(m_atlas, chartOptions, packOptions);
-    py::print("--- Generated Atlas ---");
-    py::print("Utilization: " + std::to_string(m_atlas->utilization[0] * 100.f) + "%");
-    py::print("Charts: " + std::to_string(m_atlas->chartCount));
-    py::print("Size: " + std::to_string(m_atlas->width) + "x" + std::to_string(m_atlas->height));
-    py::print("");
+
+    if (verbose)
+    {
+        py::print("--- Generated Atlas ---");
+        py::print("Utilization: " + std::to_string(m_atlas->utilization[0] * 100.f) + "%");
+        py::print("Charts: " + std::to_string(m_atlas->chartCount));
+        py::print("Size: " + std::to_string(m_atlas->width) + "x" + std::to_string(m_atlas->height));
+        py::print("");
+    }
 }
 
 MeshResult Atlas::getMesh(std::uint32_t index)
@@ -138,7 +142,7 @@ void Atlas::bind(py::module& m)
     py::class_<Atlas>(m, "Atlas")
         .def(py::init<>())
         .def("add_mesh", &Atlas::addMesh, py::arg("positions"), py::arg("indices"), py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt)
-        .def("generate", &Atlas::generate, py::arg("chart_options") = xatlas::ChartOptions(), py::arg("pack_options") = xatlas::PackOptions())
+        .def("generate", &Atlas::generate, py::arg("chart_options") = xatlas::ChartOptions(), py::arg("pack_options") = xatlas::PackOptions(), py::arg("verbose") = false)
         .def("get_mesh", &Atlas::getMesh)
         .def_property_readonly("atlas_count", [](Atlas const& self) { return self.m_atlas->atlasCount; })
         .def_property_readonly("mesh_count", [](Atlas const& self) { return self.m_atlas->meshCount; })

@@ -48,7 +48,7 @@ public:
                  std::optional<ContiguousArray<float>> normals = std::nullopt,
                  std::optional<ContiguousArray<float>> uvs     = std::nullopt);
 
-    void generate(xatlas::ChartOptions const& chartOptions = xatlas::ChartOptions(), xatlas::PackOptions const& packOptions = xatlas::PackOptions());
+    void generate(xatlas::ChartOptions const& chartOptions = xatlas::ChartOptions(), xatlas::PackOptions const& packOptions = xatlas::PackOptions(), bool verbose = false);
 
     MeshResult getMesh(std::uint32_t index);
 
