@@ -66,11 +66,11 @@ void exportObj(std::string const&                            path,
     }
     if (normals)
     {
-        checkShape("Normal", *normals, 3, positions.shape()[0]);
+        checkShape("Normal", *normals, 3, positions.shape(0));
     }
     if (uvs)
     {
-        checkShape("Texture coordinates", *uvs, 2, positions.shape()[0]);
+        checkShape("Texture coordinates", *uvs, 2, positions.shape(0));
     }
 
     std::ofstream file(path);
@@ -81,7 +81,7 @@ void exportObj(std::string const&                            path,
     }
 
     // Write the vertex positions
-    for (py::ssize_t v = 0; v < positions.shape()[0]; ++v)
+    for (py::ssize_t v = 0; v < positions.shape(0); ++v)
     {
         float const* position = positions.data(v, 0);
         file << "v " << position[0] << " " << position[1] << " " << position[2] << std::endl;
@@ -90,7 +90,7 @@ void exportObj(std::string const&                            path,
     // Write the vertex normals
     if (normals)
     {
-        for (py::ssize_t v = 0; v < (*normals).shape()[0]; ++v)
+        for (py::ssize_t v = 0; v < (*normals).shape(0); ++v)
         {
             float const* normal = (*normals).data(v, 0);
             file << "vn " << normal[0] << " " << normal[1] << " " << normal[2] << std::endl;
@@ -100,7 +100,7 @@ void exportObj(std::string const&                            path,
     // Write the vertex uv coordinates
     if (uvs)
     {
-        for (py::ssize_t v = 0; v < (*uvs).shape()[0]; ++v)
+        for (py::ssize_t v = 0; v < (*uvs).shape(0); ++v)
         {
             float const* uv = (*uvs).data(v, 0);
             file << "vt " << uv[0] << " " << uv[1] << std::endl;
@@ -125,7 +125,7 @@ void exportObj(std::string const&                            path,
         }
 
         // Write the faces
-        for (py::ssize_t f = 0; f < (*indices).shape()[0]; ++f)
+        for (py::ssize_t f = 0; f < (*indices).shape(0); ++f)
         {
             std::uint32_t const* face = (*indices).data(f, 0);
 

@@ -49,17 +49,17 @@ void Atlas::addMesh(ContiguousArray<float> const&         positions,
     checkShape("Index", indices, 3);
     if (normals)
     {
-        checkShape("Normal", *normals, 3, positions.shape()[0]);
+        checkShape("Normal", *normals, 3, positions.shape(0));
     }
     if (uvs)
     {
-        checkShape("Texture coordinates", *uvs, 2, positions.shape()[0]);
+        checkShape("Texture coordinates", *uvs, 2, positions.shape(0));
     }
 
     // Fill the mesh declaration
     xatlas::MeshDecl meshDecl;
 
-    meshDecl.vertexCount          = static_cast<std::uint32_t>(positions.shape()[0]);
+    meshDecl.vertexCount          = static_cast<std::uint32_t>(positions.shape(0));
     meshDecl.vertexPositionData   = positions.data();
     meshDecl.vertexPositionStride = sizeof(float) * 3; // X, Y, Z
 
