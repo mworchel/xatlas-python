@@ -101,29 +101,32 @@ MeshResult Atlas::getMesh(std::uint32_t index)
 
     auto const& mesh = m_atlas->meshes[index];
 
-    py::array_t<std::uint32_t> vertexMapping(py::array::ShapeContainer{mesh.vertexCount});
-    py::array_t<float>         uvs(py::array::ShapeContainer{mesh.vertexCount, 2U});
+    py::array_t<std::uint32_t> mapping({mesh.vertexCount});
+    py::array_t<float>         uvs({mesh.vertexCount, 2U});
 
+    auto mapping_ = mapping.mutable_unchecked<1>();
+    auto uvs_     = uvs.mutable_unchecked<2>();
     for (size_t v = 0; v < static_cast<size_t>(mesh.vertexCount); ++v)
     {
         auto const& vertex = mesh.vertexArray[v];
 
-        *(vertexMapping.mutable_data(v)) = vertex.xref;
+        mapping_(v) = vertex.xref;
 
-        *(uvs.mutable_data(v, 0)) = vertex.uv[0] / m_atlas->width;
-        *(uvs.mutable_data(v, 1)) = vertex.uv[1] / m_atlas->height;
+        uvs_(v, 0) = vertex.uv[0] / m_atlas->width;
+        uvs_(v, 1) = vertex.uv[1] / m_atlas->height;
     }
 
-    py::array_t<std::uint32_t> indices(py::array::ShapeContainer{mesh.indexCount / 3, 3U});
+    py::array_t<std::uint32_t> indices({mesh.indexCount / 3, 3U});
 
+    auto indices_ = indices.mutable_unchecked<2>();
     for (size_t f = 0; f < static_cast<size_t>(mesh.indexCount) / 3; ++f)
     {
-        *(indices.mutable_data(f, 0)) = mesh.indexArray[f*3 + 0];
-        *(indices.mutable_data(f, 1)) = mesh.indexArray[f*3 + 1];
-        *(indices.mutable_data(f, 2)) = mesh.indexArray[f*3 + 2];
+        indices_(f, 0) = mesh.indexArray[f*3 + 0];
+        indices_(f, 1) = mesh.indexArray[f*3 + 1];
+        indices_(f, 2) = mesh.indexArray[f*3 + 2];
     }
 
-    return std::make_tuple(vertexMapping, indices, uvs);
+    return std::make_tuple(mapping, indices, uvs);
 }
 
 void Atlas::bind(py::module& m)
