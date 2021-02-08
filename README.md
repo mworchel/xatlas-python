@@ -77,3 +77,7 @@ atlas.height      # Height of the atlas
 ## License
 
 The xatlas Python bindings are provided under a MIT license. By using, distributing, or contributing to this project, you agree to the terms and conditions of this license.
+
+## References
+
+Test model taken from the [ABC dataset](https://deep-geometry.github.io/abc-dataset/)
