@@ -34,7 +34,7 @@
 #include <optional>
 #include <tuple>
 
-using MeshResult = std::tuple<ContiguousArray<std::uint32_t>, ContiguousArray<std::uint32_t>, ContiguousArray<float>>;
+using MeshResult = std::tuple<pybind11::array_t<std::uint32_t>, pybind11::array_t<std::uint32_t>, pybind11::array_t<float>>;
 
 class Atlas
 {
