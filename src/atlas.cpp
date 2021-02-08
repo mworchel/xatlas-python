@@ -24,6 +24,8 @@
 
 #include "atlas.hpp"
 
+#include <random>
+
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 
@@ -137,6 +139,68 @@ MeshResult Atlas::getMesh(std::uint32_t index)
     return std::make_tuple(mapping, indices, uvs);
 }
 
+py::array_t<std::uint8_t> Atlas::getChartImage()
+{
+    if (!m_atlas->image || m_atlas->width == 0 || m_atlas->height == 0)
+    {
+        throw std::runtime_error("The atlas does not have an image.");
+    }
+
+    // Generate a color for each chart
+    std::vector<uint8_t[3]>              chartColors(m_atlas->chartCount);
+    std::uniform_int_distribution<short> distribution(50, 255);
+    size_t                               chartIndex = 0U;
+    for (auto& color : chartColors)
+    {
+        std::default_random_engine engine(chartIndex++);
+        color[0] = static_cast<std::uint8_t>(distribution(engine));
+        color[1] = static_cast<std::uint8_t>(distribution(engine));
+        color[2] = static_cast<std::uint8_t>(distribution(engine));
+    }
+
+    // Fill an image with the chart colors
+    py::array_t<std::uint8_t> image(py::array::ShapeContainer{ m_atlas->height, m_atlas->width, 3U });
+
+    auto image_ = image.mutable_unchecked<3>();
+    for (uint32_t y = 0; y < m_atlas->height; ++y)
+    {
+        for (uint32_t x = 0; x < m_atlas->width; ++x)
+        {
+            uint32_t const data = m_atlas->image[x + y * m_atlas->width];
+
+            if (data == 0)
+            {
+                image_(y, x, 0) = image_(y, x, 1) = image_(y, x, 2) = 0;
+                continue;
+            }
+
+            const uint32_t chartIndex = data & xatlas::kImageChartIndexMask;
+            if (data & xatlas::kImageIsPaddingBit)
+            {
+                image_(y, x, 0) = 0;
+                image_(y, x, 1) = 0;
+                image_(y, x, 2) = 255;
+            }
+            else if (data & xatlas::kImageIsBilinearBit)
+            {
+                image_(y, x, 0) = 0;
+                image_(y, x, 1) = 255;
+                image_(y, x, 2) = 0;
+            }
+            else
+            {
+                auto color = chartColors[chartIndex];
+
+                image_(y, x, 0) = color[0];
+                image_(y, x, 1) = color[1];
+                image_(y, x, 2) = color[2];
+            }
+        }
+    }
+
+    return image;
+}
+
 void Atlas::bind(py::module& m)
 {
     py::class_<Atlas>(m, "Atlas")
@@ -151,6 +215,7 @@ void Atlas::bind(py::module& m)
         .def_property_readonly("height", [](Atlas const& self) { return self.m_atlas->height; })
         .def_property_readonly("texels_per_unit", [](Atlas const& self) { return self.m_atlas->texelsPerUnit; })
         .def_property_readonly("utilization", [](Atlas const& self) { return self.m_atlas->utilization; })
+        .def_property_readonly("chart_image", &Atlas::getChartImage)
 
         // Convenience bindings
         .def("__len__", [](Atlas const& self) { return self.m_atlas->meshCount; })

@@ -52,6 +52,8 @@ public:
 
     MeshResult getMesh(std::uint32_t index);
 
+    pybind11::array_t<std::uint8_t> getChartImage();
+
     static void bind(pybind11::module& m);
 
 private:
