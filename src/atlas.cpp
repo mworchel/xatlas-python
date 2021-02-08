@@ -105,8 +105,8 @@ MeshResult Atlas::getMesh(std::uint32_t index)
 
     auto const& mesh = m_atlas->meshes[index];
 
-    py::array_t<std::uint32_t> mapping({mesh.vertexCount});
-    py::array_t<float>         uvs({mesh.vertexCount, 2U});
+    py::array_t<std::uint32_t> mapping(py::array::ShapeContainer{mesh.vertexCount});
+    py::array_t<float>         uvs(py::array::ShapeContainer{mesh.vertexCount, 2U});
 
     auto mapping_ = mapping.mutable_unchecked<1>();
     auto uvs_     = uvs.mutable_unchecked<2>();
@@ -120,7 +120,7 @@ MeshResult Atlas::getMesh(std::uint32_t index)
         uvs_(v, 1) = vertex.uv[1] / m_atlas->height;
     }
 
-    py::array_t<std::uint32_t> indices({mesh.indexCount / 3, 3U});
+    py::array_t<std::uint32_t> indices(py::array::ShapeContainer{mesh.indexCount / 3, 3U});
 
     auto indices_ = indices.mutable_unchecked<2>();
     for (size_t f = 0; f < static_cast<size_t>(mesh.indexCount) / 3; ++f)
