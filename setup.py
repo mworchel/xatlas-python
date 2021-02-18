@@ -105,7 +105,7 @@ class CMakeBuild(build_ext):
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
     name="xatlas",
-    version="0.0.2",
+    version="0.0.3",
     description="Python bindings for xatlas",
     author="Markus Worchel",
     author_email="m.worchel@campus.tu-berlin.de",
