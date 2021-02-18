@@ -1,12 +1,11 @@
 name: Wheels
 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # Triggers the workflow on manual dispatch or when a release is published
   workflow_dispatch:
+  release:
+    types:
+      - published
 
 jobs:
   build_wheels:
