@@ -147,15 +147,16 @@ py::array_t<std::uint8_t> Atlas::getChartImage()
     }
 
     // Generate a color for each chart
-    std::vector<uint8_t[3]>              chartColors(m_atlas->chartCount);
-    std::uniform_int_distribution<short> distribution(50, 255);
-    size_t                               chartIndex = 0U;
+    std::vector<uint8_t[3]>                     chartColors(m_atlas->chartCount);
+    std::uniform_int_distribution<unsigned int> distribution(0, 254); // Original code uses `% 255`, which excludes 255
+    constexpr unsigned int const                mix        = 192U;
+    size_t                                      chartIndex = 0U;
     for (auto& color : chartColors)
     {
         std::default_random_engine engine(chartIndex++);
-        color[0] = static_cast<std::uint8_t>(distribution(engine));
-        color[1] = static_cast<std::uint8_t>(distribution(engine));
-        color[2] = static_cast<std::uint8_t>(distribution(engine));
+        color[0] = static_cast<std::uint8_t>((distribution(engine) + mix) * 0.5f) ;
+        color[1] = static_cast<std::uint8_t>((distribution(engine) + mix) * 0.5f);
+        color[2] = static_cast<std::uint8_t>((distribution(engine) + mix) * 0.5f);
     }
 
     // Fill an image with the chart colors
