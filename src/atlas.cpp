@@ -156,7 +156,7 @@ py::array_t<std::uint8_t> Atlas::getChartImage()
     size_t                                      chartIndex = 0U;
     for (auto& color : chartColors)
     {
-        std::default_random_engine engine(chartIndex++);
+        std::default_random_engine engine(static_cast<unsigned int>(chartIndex++));
         color[0] = static_cast<std::uint8_t>((distribution(engine) + mix) * 0.5f) ;
         color[1] = static_cast<std::uint8_t>((distribution(engine) + mix) * 0.5f);
         color[2] = static_cast<std::uint8_t>((distribution(engine) + mix) * 0.5f);
