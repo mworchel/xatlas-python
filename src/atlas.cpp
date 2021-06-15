@@ -24,6 +24,7 @@
 
 #include "atlas.hpp"
 
+#include <array>
 #include <random>
 
 #include <pybind11/numpy.h>
@@ -149,7 +150,7 @@ py::array_t<std::uint8_t> Atlas::getChartImage()
     }
 
     // Generate a color for each chart
-    std::vector<uint8_t[3]>                     chartColors(m_atlas->chartCount);
+    std::vector<std::array<uint8_t, 3>>         chartColors(m_atlas->chartCount);
     std::uniform_int_distribution<unsigned int> distribution(0, 254); // Original code uses `% 255`, which excludes 255
     constexpr unsigned int const                mix        = 192U;
     size_t                                      chartIndex = 0U;
