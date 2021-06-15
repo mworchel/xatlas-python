@@ -141,6 +141,8 @@ MeshResult Atlas::getMesh(std::uint32_t index)
 
 py::array_t<std::uint8_t> Atlas::getChartImage()
 {
+    // Code inspired by xatlas::writeTga
+
     if (!m_atlas->image || m_atlas->width == 0 || m_atlas->height == 0)
     {
         throw std::runtime_error("The atlas does not have an image.");
