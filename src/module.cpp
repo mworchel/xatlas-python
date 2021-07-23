@@ -142,7 +142,7 @@ PYBIND11_MODULE(xatlas, m)
     Atlas::bind(m);
 
     // Convenience functions
-    m.def("parametrize", &parametrize, py::arg("positions"), py::arg("indices"), py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt);
+    m.def("parametrize", &parametrize, py::arg("positions"), py::arg("indices"), py::arg("normals") = std::nullopt, py::arg("uvs") = std::nullopt);
 
     // I/O functions
     m.def("export", &exportObj, py::arg("path"), py::arg("positions"), py::arg("indices") = std::nullopt, py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt);
