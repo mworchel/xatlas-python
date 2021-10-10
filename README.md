@@ -60,6 +60,23 @@ vmapping1, indices1, uvs1 = atlas[0]
 vmapping2, indices2, uvs2 = atlas[1]
 ```
 
+### Repack multiple parametrized meshes into one atlas
+
+```python
+vertices1, indices1, uvs1 = load_mesh_with_uvs("input1.obj")
+vertices2, indices2, uvs2 = load_mesh_with_uvs("input2.obj")
+
+atlas = xatlas.Atlas()
+
+atlas.add_uv_mesh(uvs1, indices1)
+atlas.add_uv_mesh(uvs2, indices2)
+
+atlas.generate()
+
+vmapping1, indices1, uvs1 = atlas[0]
+vmapping2, indices2, uvs2 = atlas[1]
+```
+
 ### Query the atlas
 
 ```python
