@@ -34,8 +34,8 @@ mesh = trimesh.load_mesh("input.obj")
 # `uvs` contains texture coordinates of the new vertices (shape Nx2, type float32)
 vmapping, indices, uvs = xatlas.parametrize(mesh.vertices, mesh.faces)
 
-# Trimesh does not correctly export the parametrized mesh, so we 
-# can use the `export` helper function to export the mesh as obj.
+# Trimesh needs a material to export uv coordinates and always creates a *.mtl file.
+# Alternatively, we can use the `export` helper function to export the mesh as obj.
 xatlas.export("output.obj", mesh.vertices[vmapping], indices, uvs)
 
 # Both `xatlas.parametrize` and `xatlas.export` also accept vertex normals
