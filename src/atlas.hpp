@@ -48,6 +48,10 @@ public:
                  std::optional<ContiguousArray<float>> normals = std::nullopt,
                  std::optional<ContiguousArray<float>> uvs     = std::nullopt);
 
+    void addUvMesh(ContiguousArray<float> const&            uvs,
+                   ContiguousArray<std::uint32_t> const&    indices,
+                   std::optional<ContiguousArray<uint32_t>> faceMaterials = std::nullopt);
+
     void generate(xatlas::ChartOptions const& chartOptions = xatlas::ChartOptions(), xatlas::PackOptions const& packOptions = xatlas::PackOptions(), bool verbose = false);
 
     MeshResult getMesh(std::uint32_t index);

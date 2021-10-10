@@ -89,6 +89,42 @@ void Atlas::addMesh(ContiguousArray<float> const&         positions,
     }
 }
 
+void Atlas::addUvMesh(ContiguousArray<float> const&            uvs,
+                      ContiguousArray<std::uint32_t> const&    indices,
+                      std::optional<ContiguousArray<uint32_t>> faceMaterials)
+{
+    // Perform sanity checks on the inputs
+    checkShape("Texture coordinate", uvs, 2);
+    checkShape("Index", indices, 3);
+    if (faceMaterials)
+    {
+        checkShape("Face material ID", *faceMaterials, 1, indices.shape(0));
+    }
+
+    // Fill the mesh declaration
+    xatlas::UvMeshDecl meshDecl;
+
+    meshDecl.vertexCount  = static_cast<std::uint32_t>(uvs.shape(0));
+    meshDecl.vertexUvData = uvs.data();
+    meshDecl.vertexStride = sizeof(float) * 2; // U, V
+
+    meshDecl.indexCount  = static_cast<std::uint32_t>(indices.size());
+    meshDecl.indexData   = indices.data();
+    meshDecl.indexFormat = xatlas::IndexFormat::UInt32;
+
+    if (faceMaterials)
+    {
+        meshDecl.faceMaterialData = faceMaterials->data();
+    }
+
+    xatlas::AddMeshError error = xatlas::AddUvMesh(m_atlas, meshDecl);
+
+    if (error != xatlas::AddMeshError::Success)
+    {
+        throw std::runtime_error("Adding mesh failed: " + std::string(xatlas::StringForEnum(error)));
+    }
+}
+
 void Atlas::generate(xatlas::ChartOptions const& chartOptions, xatlas::PackOptions const& packOptions, bool verbose)
 {
     xatlas::Generate(m_atlas, chartOptions, packOptions);
@@ -210,6 +246,7 @@ void Atlas::bind(py::module& m)
     py::class_<Atlas>(m, "Atlas")
         .def(py::init<>())
         .def("add_mesh", &Atlas::addMesh, py::arg("positions"), py::arg("indices"), py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt)
+        .def("add_uv_mesh", &Atlas::addUvMesh, py::arg("uvs"), py::arg("indices"), py::arg("face_materials") = std::nullopt)
         .def("generate", &Atlas::generate, py::arg("chart_options") = xatlas::ChartOptions(), py::arg("pack_options") = xatlas::PackOptions(), py::arg("verbose") = false)
         .def("get_mesh", &Atlas::getMesh)
         .def_property_readonly("atlas_count", [](Atlas const& self) { return self.m_atlas->atlasCount; })
