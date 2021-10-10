@@ -71,6 +71,12 @@ atlas[i]          # Convenience binding for `atlas.get_mesh`
 atlas.width       # Width of the atlas 
 atlas.height      # Height of the atlas
 
+# The image requires passing custom PackOptions:
+#   pack_options = xatlas.PackOptions()
+#   pack_options.create_image = True
+#   atlas.generate(pack_options=pack_options)
+atlas.chart_image # Debug image of the atlas
+
 ...               # See xatlas documentation for all properties
 ```
 
