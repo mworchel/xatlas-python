@@ -54,9 +54,11 @@ public:
 
     void generate(xatlas::ChartOptions const& chartOptions = xatlas::ChartOptions(), xatlas::PackOptions const& packOptions = xatlas::PackOptions(), bool verbose = false);
 
-    MeshResult getMesh(std::uint32_t index);
+    MeshResult getMesh(std::uint32_t index) const;
 
-    pybind11::array_t<std::uint8_t> getChartImage();
+    float getUtilization(std::uint32_t index) const;
+
+    pybind11::array_t<std::uint8_t> getChartImage(std::uint32_t index) const;
 
     static void bind(pybind11::module& m);
 

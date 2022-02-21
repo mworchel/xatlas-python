@@ -139,7 +139,7 @@ void Atlas::generate(xatlas::ChartOptions const& chartOptions, xatlas::PackOptio
     }
 }
 
-MeshResult Atlas::getMesh(std::uint32_t index)
+MeshResult Atlas::getMesh(std::uint32_t index) const
 {
     if (index >= m_atlas->meshCount)
     {
@@ -176,9 +176,24 @@ MeshResult Atlas::getMesh(std::uint32_t index)
     return std::make_tuple(mapping, indices, uvs);
 }
 
-py::array_t<std::uint8_t> Atlas::getChartImage()
+float Atlas::getUtilization(std::uint32_t index) const
+{
+    if (index >= m_atlas->atlasCount)
+    {
+        throw std::out_of_range("Atlas index " + std::to_string(index) + " out of bounds.");
+    }
+
+    return m_atlas->utilization[index];
+}
+
+py::array_t<std::uint8_t> Atlas::getChartImage(std::uint32_t index) const
 {
     // Code inspired by xatlas::writeTga
+
+    if (index >= m_atlas->atlasCount)
+    {
+        throw std::out_of_range("Atlas index " + std::to_string(index) + " out of bounds.");
+    }
 
     if (!m_atlas->image || m_atlas->width == 0 || m_atlas->height == 0)
     {
@@ -201,12 +216,13 @@ py::array_t<std::uint8_t> Atlas::getChartImage()
     // Fill an image with the chart colors
     py::array_t<std::uint8_t> image(py::array::ShapeContainer{ m_atlas->height, m_atlas->width, 3U });
 
+    size_t offset = m_atlas->width * m_atlas->height * index;
     auto image_ = image.mutable_unchecked<3>();
     for (uint32_t y = 0; y < m_atlas->height; ++y)
     {
         for (uint32_t x = 0; x < m_atlas->width; ++x)
         {
-            uint32_t const data = m_atlas->image[x + y * m_atlas->width];
+            uint32_t const data = m_atlas->image[x + y * m_atlas->width + offset];
 
             if (data == 0)
             {
@@ -248,15 +264,17 @@ void Atlas::bind(py::module& m)
         .def("add_mesh", &Atlas::addMesh, py::arg("positions"), py::arg("indices"), py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt)
         .def("add_uv_mesh", &Atlas::addUvMesh, py::arg("uvs"), py::arg("indices"), py::arg("face_materials") = std::nullopt)
         .def("generate", &Atlas::generate, py::arg("chart_options") = xatlas::ChartOptions(), py::arg("pack_options") = xatlas::PackOptions(), py::arg("verbose") = false)
-        .def("get_mesh", &Atlas::getMesh)
+        .def("get_mesh", &Atlas::getMesh, py::arg("mesh_index"))
+        .def("get_utilization", &Atlas::getUtilization, py::arg("atlas_index"))
+        .def("get_chart_image", &Atlas::getChartImage, py::arg("atlas_index"))
         .def_property_readonly("atlas_count", [](Atlas const& self) { return self.m_atlas->atlasCount; })
         .def_property_readonly("mesh_count", [](Atlas const& self) { return self.m_atlas->meshCount; })
         .def_property_readonly("chart_count", [](Atlas const& self) { return self.m_atlas->chartCount; })
         .def_property_readonly("width", [](Atlas const& self) { return self.m_atlas->width; })
         .def_property_readonly("height", [](Atlas const& self) { return self.m_atlas->height; })
         .def_property_readonly("texels_per_unit", [](Atlas const& self) { return self.m_atlas->texelsPerUnit; })
-        .def_property_readonly("utilization", [](Atlas const& self) { return self.m_atlas->utilization; })
-        .def_property_readonly("chart_image", &Atlas::getChartImage)
+        .def_property_readonly("utilization", [](Atlas const& self){ return self.getUtilization(0); })
+        .def_property_readonly("chart_image", [](Atlas const& self){ return self.getChartImage(0); })
 
         // Convenience bindings
         .def("__len__", [](Atlas const& self) { return self.m_atlas->meshCount; })
