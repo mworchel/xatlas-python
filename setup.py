@@ -111,7 +111,6 @@ setup(
     author_email="m.worchel@campus.tu-berlin.de",
     license='MIT',
     url='https://github.com/mworchel/xatlas-python',
-    long_description="",
     ext_modules=[CMakeExtension("xatlas")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
