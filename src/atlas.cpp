@@ -261,7 +261,7 @@ void Atlas::bind(py::module& m)
 {
     py::class_<Atlas>(m, "Atlas")
         .def(py::init<>())
-        .def("add_mesh", &Atlas::addMesh, py::arg("positions"), py::arg("indices"), py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt)
+        .def("add_mesh", &Atlas::addMesh, py::arg("positions"), py::arg("indices"), py::arg("normals") = std::nullopt, py::arg("uvs") = std::nullopt)
         .def("add_uv_mesh", &Atlas::addUvMesh, py::arg("uvs"), py::arg("indices"), py::arg("face_materials") = std::nullopt)
         .def("generate", &Atlas::generate, py::arg("chart_options") = xatlas::ChartOptions(), py::arg("pack_options") = xatlas::PackOptions(), py::arg("verbose") = false)
         .def("get_mesh", &Atlas::getMesh, py::arg("mesh_index"))
