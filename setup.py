@@ -109,6 +109,7 @@ setup(
     name="xatlas",
     version="0.0.8",
     python_requires=">=3.7",
+    install_requires=["numpy"],
     description="Python bindings for xatlas",
     author="Markus Worchel",
     author_email="m.worchel@campus.tu-berlin.de",
