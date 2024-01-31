@@ -1,10 +1,16 @@
+import os
+
 import numpy as np
 import pytest
 import trimesh
 import xatlas
 
+# current working directory
+cwd = os.path.abspath(os.path.expanduser(os.path.dirname(__file__)))
+
+
 def test_add_mesh():
-    mesh = trimesh.load_mesh("tests/data/00190663.obj")
+    mesh = trimesh.load_mesh(os.path.join(cwd, "data", "00190663.obj"))
 
     atlas = xatlas.Atlas()
 
@@ -40,28 +46,35 @@ def test_add_mesh():
 
     # Normals have wrong shape (first dimension)
     with pytest.raises(ValueError) as e:
-        atlas.add_mesh(mesh.vertices, mesh.faces,  np.random.rand(1, 3))
+        atlas.add_mesh(mesh.vertices, mesh.faces, np.random.rand(1, 3))
     assert "first dimension" in str(e.value)
 
     # UVs have wrong shape (number of dimensions)
     with pytest.raises(ValueError) as e:
-        atlas.add_mesh(mesh.vertices, mesh.faces, mesh.vertex_normals, np.random.rand(1))
+        atlas.add_mesh(
+            mesh.vertices, mesh.faces, mesh.vertex_normals, np.random.rand(1)
+        )
     assert "Nx2" in str(e.value)
 
     # UVs have wrong shape (second dimension)
     with pytest.raises(ValueError) as e:
-        atlas.add_mesh(mesh.vertices, mesh.faces, mesh.vertex_normals, np.random.rand(1, 1))
+        atlas.add_mesh(
+            mesh.vertices, mesh.faces, mesh.vertex_normals, np.random.rand(1, 1)
+        )
     assert "Nx2" in str(e.value)
 
     # UVs have wrong shape (first dimension)
     with pytest.raises(ValueError) as e:
-        atlas.add_mesh(mesh.vertices, mesh.faces, mesh.vertex_normals, np.random.rand(1, 2))
+        atlas.add_mesh(
+            mesh.vertices, mesh.faces, mesh.vertex_normals, np.random.rand(1, 2)
+        )
     assert "first dimension" in str(e.value)
 
     # Index array references out-of-bounds vertices
     with pytest.raises(RuntimeError) as e:
         atlas.add_mesh(np.random.rand(1, 3), mesh.faces)
     assert "out of range" in str(e.value)
+
 
 def test_generate():
     mesh = trimesh.load_mesh("tests/data/00190663.obj")
@@ -87,6 +100,7 @@ def test_generate():
     assert atlas.chart_count == 70
     assert atlas.width == 1057
     assert atlas.height == 1057
+
 
 def test_get_mesh():
     mesh = trimesh.load_mesh("tests/data/00190663.obj")

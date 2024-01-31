@@ -1,11 +1,17 @@
-import pytest
+import os
 import trimesh
 import xatlas
 
-def test_parametrize():
-    mesh = trimesh.load_mesh("tests/data/00190663.obj")
+# current working directory
+cwd = os.path.abspath(os.path.expanduser(os.path.dirname(__file__)))
 
-    vmapping, indices, uvs = xatlas.parametrize(mesh.vertices, mesh.faces, mesh.vertex_normals)
+
+def test_parametrize():
+    mesh = trimesh.load_mesh(os.path.join(cwd, "data", "00190663.obj"))
+
+    vmapping, indices, uvs = xatlas.parametrize(
+        mesh.vertices, mesh.faces, mesh.vertex_normals
+    )
     assert vmapping.shape == (18996,)
     assert indices.shape == (32668, 3)
     assert uvs.shape == (18996, 2)
