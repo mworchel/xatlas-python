@@ -32,3 +32,5 @@ test-command = "pytest {package}/tests"
 # will install pytest and other packages in the `test` extra
 test-extras = ["test"]
 
+# Skip PyPy on Windows as it doesn't appear to have numpy wheels
+skip = ["pp*-win*"]
