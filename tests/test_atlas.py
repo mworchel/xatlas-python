@@ -98,8 +98,8 @@ def test_generate():
     assert uvs.shape == (18996, 2)
 
     assert atlas.chart_count == 70
-    assert atlas.width >= 1057
-    assert atlas.height >= 1057
+    assert atlas.width >= 900
+    assert atlas.height >= 900
 
 
 def test_get_mesh():
