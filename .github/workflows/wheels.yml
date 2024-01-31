@@ -1,11 +1,9 @@
 name: Wheels
 
 on:
-  # Triggers the workflow on manual dispatch or when a release is published
-  workflow_dispatch:
-  release:
-    types:
-      - published
+  push:
+    branches:
+      - main
 
 jobs:
   build_wheels:
