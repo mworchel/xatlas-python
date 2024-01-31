@@ -10,8 +10,8 @@ jobs:
   build:
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, '3.10', 3.11]
-        platform: [windows-latest, macos-latest, ubuntu-20.04]
+        python-version: [3.6, 3.7, 3.8, 3.9, '3.10', '3.11', '3.12']
+        platform: [windows-latest, macos-latest, ubuntu-22.04]
 
     runs-on: ${{ matrix.platform }}
 
