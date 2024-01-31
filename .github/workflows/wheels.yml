@@ -20,9 +20,6 @@ jobs:
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.16.5
-        env:
-          # We don't support Python 2.7
-          CIBW_SKIP: cp27-*
         with:
           output-dir: wheelhouse
 
