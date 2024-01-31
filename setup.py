@@ -108,6 +108,7 @@ long_description = (Path(__file__).parent / "README.md").read_text()
 setup(
     name="xatlas",
     version="0.0.8",
+    python_requires=">=3.7",
     description="Python bindings for xatlas",
     author="Markus Worchel",
     author_email="m.worchel@campus.tu-berlin.de",
