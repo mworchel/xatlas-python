@@ -2,7 +2,6 @@
 
 # -*- coding: utf-8 -*-
 import os
-from pathlib import Path
 import sys
 import subprocess
 
@@ -62,7 +61,6 @@ class CMakeBuild(build_ext):
                 cmake_args += ["-GNinja"]
 
         else:
-
             # Single config generators are handled "normally"
             single_config = any(x in cmake_generator for x in {"NMake", "Ninja"})
 
@@ -100,25 +98,11 @@ class CMakeBuild(build_ext):
         subprocess.check_call(
             ["cmake", "--build", "."] + build_args, cwd=self.build_temp
         )
-        
-long_description = (Path(__file__).parent / "README.md").read_text()
 
-# The information here can also be placed in setup.cfg - better separation of
+
+# The information here can also be placed in pyproject.toml - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
-    name="xatlas",
-    version="0.0.8",
-    python_requires=">=3.7",
-    install_requires=["numpy"],
-    extras_require={'test': ["trimesh", "pytest"]},
-    description="Python bindings for xatlas",
-    author="Markus Worchel",
-    author_email="m.worchel@campus.tu-berlin.de",
-    license='MIT',
-    url='https://github.com/mworchel/xatlas-python',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
     ext_modules=[CMakeExtension("xatlas")],
     cmdclass={"build_ext": CMakeBuild},
-    zip_safe=False,
 )
