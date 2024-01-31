@@ -103,7 +103,7 @@ def test_generate():
 
 
 def test_get_mesh():
-    mesh = trimesh.load_mesh("tests/data/00190663.obj")
+    mesh = trimesh.load_mesh(os.path.join(cwd, "data", "00190663.obj"))
 
     atlas = xatlas.Atlas()
 
