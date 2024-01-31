@@ -110,6 +110,7 @@ setup(
     version="0.0.8",
     python_requires=">=3.7",
     install_requires=["numpy"],
+    extras_require={'test': ["trimesh", "pytest"]},
     description="Python bindings for xatlas",
     author="Markus Worchel",
     author_email="m.worchel@campus.tu-berlin.de",
