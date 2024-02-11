@@ -6,3 +6,31 @@ requires = [
     "cmake>=3.12",
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "xatlas"
+requires-python = ">=3.7"
+version = "0.0.9"
+authors = [{name = "Markus Worchel", email = "m.worchel@campus.tu-berlin.de"}]
+license = {file = "LICENSE"}
+description = "Python bindings for xatlas"
+urls = {Homepage = "https://github.com/mworchel/xatlas-python"}
+dependencies = ["numpy"]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.optional-dependencies]
+test = ["trimesh",
+        "pytest"]
+
+[tool.cibuildwheel]
+# Run the package tests on every wheel using `pytest`
+test-command = "pytest {package}/tests"
+
+# will install pytest and other packages in the `test` extra
+test-extras = ["test"]
+
+# Skip PyPy on Windows as it doesn't appear to have numpy wheels
+skip = ["pp*-win*", "*musllinux_i686"]
