@@ -2,6 +2,7 @@
 
 # -*- coding: utf-8 -*-
 import os
+import shutil
 import sys
 import subprocess
 
@@ -100,9 +101,17 @@ class CMakeBuild(build_ext):
         )
 
 
+setup_requires = []
+if shutil.which("cmake") is None:
+    setup_requires += ["cmake>=3.12"]
+if shutil.which("ninja") is None:
+    setup_requires += ["ninja; sys_platform != 'win32'"]
+
+
 # The information here can also be placed in pyproject.toml - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
     ext_modules=[CMakeExtension("xatlas")],
+    setup_requires=setup_requires,
     cmdclass={"build_ext": CMakeBuild},
 )
