@@ -35,4 +35,4 @@ test-extras = ["test"]
 skip = ["pp*-win*", "*musllinux_i686"]
 
 [tool.setuptools]
-license-files = [ "LICENSE" ]
+license-files = []
