@@ -29,12 +29,10 @@ test = ["trimesh",
 [tool.cibuildwheel]
 # Run the package tests on every wheel using `pytest`
 test-command = "pytest {package}/tests"
+# will install pytest and other packages in the `test` extra
+test-extras = ["test"]
+# Skip PyPy on Windows as it doesn't appear to have numpy wheels
+skip = ["pp*-win*", "*musllinux_i686"]
 
 [tool.setuptools]
 license-files = [ "LICENSE" ]
-
-# will install pytest and other packages in the `test` extra
-test-extras = ["test"]
-
-# Skip PyPy on Windows as it doesn't appear to have numpy wheels
-skip = ["pp*-win*", "*musllinux_i686"]
