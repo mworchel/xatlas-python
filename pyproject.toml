@@ -30,6 +30,9 @@ test = ["trimesh",
 # Run the package tests on every wheel using `pytest`
 test-command = "pytest {package}/tests"
 
+[tool.setuptools]
+license-files = [ "LICENSE" ]
+
 # will install pytest and other packages in the `test` extra
 test-extras = ["test"]
 
