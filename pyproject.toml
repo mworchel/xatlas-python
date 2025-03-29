@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xatlas"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 version = "0.0.9"
 authors = [{name = "Markus Worchel", email = "m.worchel@campus.tu-berlin.de"}]
 license = {file = "LICENSE"}
@@ -23,7 +23,8 @@ content-type = "text/markdown"
 
 [project.optional-dependencies]
 test = ["trimesh",
-        "pytest"]
+        "pytest",
+        "scipy"]
 
 [tool.cibuildwheel]
 # Run the package tests on every wheel using `pytest`
