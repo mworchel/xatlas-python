@@ -15,24 +15,22 @@ authors = [{name = "Markus Worchel", email = "m.worchel@campus.tu-berlin.de"}]
 license = {file = "LICENSE"}
 description = "Python bindings for xatlas"
 urls = {Homepage = "https://github.com/mworchel/xatlas-python"}
-dependencies = ["numpy"]
 
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
 
 [project.optional-dependencies]
-test = ["trimesh",
+test = ["numpy",
         "pytest",
-        "scipy"]
+        "scipy",
+        "trimesh"]
 
 [tool.cibuildwheel]
 # Run the package tests on every wheel using `pytest`
 test-command = "pytest {package}/tests"
 # will install pytest and other packages in the `test` extra
 test-extras = ["test"]
-# Skip PyPy on Windows as it doesn't appear to have numpy wheels
-skip = ["pp*-win*", "*musllinux_i686"]
 
 [tool.setuptools]
 license-files = []
