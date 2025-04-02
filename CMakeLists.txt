@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15...3.27)
 
-project(xatlas-python LANGUAGES CXX)
+project(xatlas-python LANGUAGES CXX
+                      VERSION ${SKBUILD_PROJECT_VERSION})
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)

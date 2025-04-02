@@ -41,6 +41,9 @@
 
 namespace py = pybind11;
 
+#define STRINGIFY(x) #x
+#define MACRO_STRINGIFY(x) STRINGIFY(x)
+
 auto parametrize(ContiguousArray<float> const&         positions,
                  ContiguousArray<std::uint32_t> const& indices,
                  std::optional<ContiguousArray<float>> normals = std::nullopt,
@@ -146,4 +149,10 @@ PYBIND11_MODULE(xatlas, m)
 
     // I/O functions
     m.def("export", &exportObj, py::arg("path"), py::arg("positions"), py::arg("indices") = std::nullopt, py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt);
+
+#ifdef VERSION_INFO
+    m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
+#else
+    m.attr("__version__") = "dev";
+#endif
 }
