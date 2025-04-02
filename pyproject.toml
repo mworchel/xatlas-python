@@ -33,7 +33,18 @@ build-dir = "build/{wheel_tag}"
 test-command = "pytest {package}/tests"
 # will install pytest and other packages in the `test` extra
 test-extras = ["test"]
+# Skip testing of PyPy and 32-bit wheels
+test-skip = ["pp*", "*win32", "*i686", "*-musllinux*"]
 
 # Needed for full C++17 support
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.14"
+
+# Install OpenBLAS on linux (required for scipy in tests)
+[tool.cibuildwheel.linux]
+before-all = "yum install -y openblas-devel"
+
+# Skip OpenBLAS installation on untested variants
+[[tool.cibuildwheel.overrides]]
+select = ["*i686", "*-musllinux*"]
+before-all = ""

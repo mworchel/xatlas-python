@@ -12,11 +12,12 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-13]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -25,31 +26,32 @@ jobs:
         with:
           output-dir: wheelhouse
 
+      - name: Verify clean directory
+        run: git diff --exit-code
+        shell: bash
+
       - uses: actions/upload-artifact@v4
         with:
-          path: ./wheelhouse/*.whl
+          name: cibw-wheels-${{ matrix.os }}
+          path: wheelhouse/*.whl
 
   build_sdist:
     name: Build SDist
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: true
 
-    - uses: actions/setup-python@v4
-
-    - name: Install deps
-      run: python -m pip install twine build
-
     - name: Build SDist
-      run: python -m build -s
+      run: pipx run build --sdist
 
     - name: Check metadata
-      run: twine check dist/*
+      run: pipx run twine check dist/*
 
     - uses: actions/upload-artifact@v4
       with:
+        name: cibw-sdist
         path: dist/*.tar.gz
 
   upload_all:
@@ -59,14 +61,17 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
 
     steps:
-    - uses: actions/setup-python@v4
-
-    - uses: actions/download-artifact@v2
+    - uses: actions/setup-python@v5
       with:
-        name: artifact
+        python-version: "3.x"
+
+    - uses: actions/download-artifact@v4
+      with:
+        pattern: cibw-*
+        merge-multiple: true
         path: dist
 
-    - uses: pypa/gh-action-pypi-publish@v1.4.2
+    - uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
