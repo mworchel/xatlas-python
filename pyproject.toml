@@ -1,11 +1,6 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel",
-    "ninja; sys_platform != 'win32'",
-    "cmake>=3.12",
-]
-build-backend = "setuptools.build_meta"
+requires = ["scikit-build-core>=0.10"]
+build-backend = "scikit_build_core.build"
 
 [project]
 name = "xatlas"
@@ -26,11 +21,19 @@ test = ["numpy",
         "scipy",
         "trimesh"]
 
+[tool.scikit-build]
+wheel.expand-macos-universal-tags = true
+# Protect the configuration against future changes in scikit-build-core
+minimum-version = "build-system.requires"
+# Setuptools-style build caching in a local directory
+build-dir = "build/{wheel_tag}"
+
 [tool.cibuildwheel]
 # Run the package tests on every wheel using `pytest`
 test-command = "pytest {package}/tests"
 # will install pytest and other packages in the `test` extra
 test-extras = ["test"]
 
-[tool.setuptools]
-license-files = []
+# Needed for full C++17 support
+[tool.cibuildwheel.macos.environment]
+MACOSX_DEPLOYMENT_TARGET = "10.14"
