@@ -8,6 +8,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+find_package(Python 3.8 
+             REQUIRED COMPONENTS Interpreter Development.Module
+             OPTIONAL_COMPONENTS Development.SABIModule)
+
 # Process external dependencies
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/extern)
 
