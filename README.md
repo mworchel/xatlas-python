@@ -91,6 +91,11 @@ atlas.height      # Height of the atlas
 atlas.utilization        # Utilization of the first atlas
 atlas.get_utilization(i) # Utilization of i-th atlas
 
+atlas.get_mesh_vertex_assignement(i) # Returns two arrays, with the atlas index and 
+                                     # chart index of each vertex in the i-th mesh
+atlas.get_mesh_chart_count(i) # Returns the number of charts of the i-th mesh
+atlas.get_mesh_chart(i, j)    # Returns the j-th chart of the i-th mesh
+
 # The image requires passing custom PackOptions:
 #   pack_options = xatlas.PackOptions()
 #   pack_options.create_image = True
