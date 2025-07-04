@@ -199,6 +199,43 @@ VertexAssignment Atlas::getMeshVertexAssignment(std::uint32_t meshIndex) const
     return std::make_tuple(atlasIndex, chartIndex);
 }
 
+uint32_t Atlas::getMeshChartCount(std::uint32_t meshIndex) const
+{
+    if (meshIndex >= m_atlas->meshCount)
+        throw std::out_of_range("Mesh index " + std::to_string(meshIndex) + " out of bounds for atlas with " + std::to_string(m_atlas->meshCount) + " meshes.");
+
+    auto const& mesh = m_atlas->meshes[meshIndex];
+
+    return mesh.chartCount;
+}
+
+Chart Atlas::getMeshChart(std::uint32_t meshIndex, std::uint32_t chartIndex) const
+{
+    if (meshIndex >= m_atlas->meshCount)
+        throw std::out_of_range("Mesh index " + std::to_string(meshIndex) + " out of bounds for atlas with " + std::to_string(m_atlas->meshCount) + " meshes.");
+
+    auto const& mesh = m_atlas->meshes[meshIndex];
+
+    if (chartIndex >= mesh.chartCount)
+        throw std::out_of_range("Chart index " + std::to_string(chartIndex) + " out of bounds for mesh with " + std::to_string(mesh.chartCount) + " charts.");
+
+    xatlas::Chart& chart = mesh.chartArray[chartIndex];
+    py::array_t<std::uint32_t> faces(py::array::ShapeContainer{chart.faceCount});
+    auto                       faces_ = faces.mutable_unchecked<1>();
+    for (size_t i = 0; i < static_cast<size_t>(chart.faceCount); ++i)
+    {
+        faces_(i) = chart.faceArray[i];
+    }
+
+    Chart chart_;
+    chart_.faces = faces;
+    chart_.atlasIndex = chart.atlasIndex;
+    chart_.type       = chart.type;
+    chart_.material   = chart.material;
+
+    return chart_;
+}
+
 float Atlas::getUtilization(std::uint32_t index) const
 {
     if (index >= m_atlas->atlasCount)
@@ -282,12 +319,21 @@ py::array_t<std::uint8_t> Atlas::getChartImage(std::uint32_t index) const
 
 void Atlas::bind(py::module& m)
 {
+    py::class_<Chart>(m, "Chart")
+        .def_property_readonly("faces", [](Chart const& self) { return self.faces; })
+        .def_property_readonly("atlas_index", [](Chart const& self) { return self.atlasIndex; })
+        .def_property_readonly("type", [](Chart const& self) { return self.type; })
+        .def_property_readonly("material", [](Chart const& self) { return self.material; });
+
     py::class_<Atlas>(m, "Atlas")
         .def(py::init<>())
         .def("add_mesh", &Atlas::addMesh, py::arg("positions"), py::arg("indices"), py::arg("normals") = std::nullopt, py::arg("uvs") = std::nullopt)
         .def("add_uv_mesh", &Atlas::addUvMesh, py::arg("uvs"), py::arg("indices"), py::arg("face_materials") = std::nullopt)
         .def("generate", &Atlas::generate, py::arg("chart_options") = xatlas::ChartOptions(), py::arg("pack_options") = xatlas::PackOptions(), py::arg("verbose") = false)
         .def("get_mesh", &Atlas::getMesh, py::arg("mesh_index"))
+        .def("get_mesh_vertex_assignment", &Atlas::getMeshVertexAssignment, py::arg("mesh_index"))
+        .def("get_mesh_chart_count", &Atlas::getMeshChartCount, py::arg("mesh_index"))
+        .def("get_mesh_chart", &Atlas::getMeshChart, py::arg("mesh_index"), py::arg("chart_index"))
         .def("get_utilization", &Atlas::getUtilization, py::arg("atlas_index"))
         .def("get_chart_image", &Atlas::getChartImage, py::arg("atlas_index"))
         .def_property_readonly("atlas_count", [](Atlas const& self) { return self.m_atlas->atlasCount; })

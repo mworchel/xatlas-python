@@ -139,7 +139,13 @@ void exportObj(std::string const&                            path,
 
 PYBIND11_MODULE(xatlas, m)
 {
-    // Bindings
+    py::enum_<xatlas::ChartType>(m, "ChartType")
+    .value("Planar", xatlas::ChartType::Planar)
+    .value("Ortho", xatlas::ChartType::Ortho)
+    .value("LSCM", xatlas::ChartType::LSCM)
+    .value("Piecewise", xatlas::ChartType::Piecewise)
+    .value("Invalid", xatlas::ChartType::Invalid);
+    
     ChartOptions::bind(m);
     PackOptions::bind(m);
     Atlas::bind(m);
