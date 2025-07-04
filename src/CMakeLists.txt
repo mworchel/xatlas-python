@@ -1,7 +1,10 @@
-pybind11_add_module(xatlas module.cpp 
-                           atlas.hpp atlas.cpp
-                           options.hpp options.cpp
-                           utils.hpp utils.cpp)
+nanobind_add_module(xatlas 
+                    STABLE_ABI
+                    NB_STATIC
+                    module.cpp 
+                    atlas.hpp atlas.cpp
+                    options.hpp options.cpp
+                    utils.hpp utils.cpp)
 
 target_link_libraries(xatlas PRIVATE xatlas-cpp)
 

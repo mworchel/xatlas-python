@@ -33,13 +33,11 @@
 #include <stdexcept>
 #include <string>
 
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include <nanobind/nanobind.h>
 
 #include <xatlas.h>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
 #define STRINGIFY(x) #x
 #define MACRO_STRINGIFY(x) STRINGIFY(x)
@@ -61,83 +59,83 @@ void exportObj(std::string const&                            path,
                std::optional<ContiguousArray<float>>         uvs     = std::nullopt,
                std::optional<ContiguousArray<float>>         normals = std::nullopt)
 {
-    // Perform sanity checks on the inputs
-    checkShape("Position", positions, 3);
-    if (indices)
-    {
-        checkShape("Index", *indices, 3);
-    }
-    if (normals)
-    {
-        checkShape("Normal", *normals, 3, positions.shape(0));
-    }
-    if (uvs)
-    {
-        checkShape("Texture coordinates", *uvs, 2, positions.shape(0));
-    }
+    //// Perform sanity checks on the inputs
+    //checkShape("Position", positions, 3);
+    //if (indices)
+    //{
+    //    checkShape("Index", *indices, 3);
+    //}
+    //if (normals)
+    //{
+    //    checkShape("Normal", *normals, 3, positions.shape(0));
+    //}
+    //if (uvs)
+    //{
+    //    checkShape("Texture coordinates", *uvs, 2, positions.shape(0));
+    //}
 
-    std::ofstream file(path);
+    //std::ofstream file(path);
 
-    if (!file.is_open())
-    {
-        throw std::invalid_argument("Cannot open path " + path);
-    }
+    //if (!file.is_open())
+    //{
+    //    throw std::invalid_argument("Cannot open path " + path);
+    //}
 
-    // Write the vertex positions
-    for (py::ssize_t v = 0; v < positions.shape(0); ++v)
-    {
-        float const* position = positions.data(v, 0);
-        file << "v " << position[0] << " " << position[1] << " " << position[2] << std::endl;
-    }
+    //// Write the vertex positions
+    //for (std::size_t v = 0; v < positions.shape(0); ++v)
+    //{
+    //    float const* position = positions.data(v, 0);
+    //    file << "v " << position[0] << " " << position[1] << " " << position[2] << std::endl;
+    //}
 
-    // Write the vertex normals
-    if (normals)
-    {
-        for (py::ssize_t v = 0; v < (*normals).shape(0); ++v)
-        {
-            float const* normal = (*normals).data(v, 0);
-            file << "vn " << normal[0] << " " << normal[1] << " " << normal[2] << std::endl;
-        }
-    }
+    //// Write the vertex normals
+    //if (normals)
+    //{
+    //    for (std::size_t v = 0; v < (*normals).shape(0); ++v)
+    //    {
+    //        float const* normal = (*normals).data(v, 0);
+    //        file << "vn " << normal[0] << " " << normal[1] << " " << normal[2] << std::endl;
+    //    }
+    //}
 
-    // Write the vertex uv coordinates
-    if (uvs)
-    {
-        for (py::ssize_t v = 0; v < (*uvs).shape(0); ++v)
-        {
-            float const* uv = (*uvs).data(v, 0);
-            file << "vt " << uv[0] << " " << uv[1] << std::endl;
-        }
-    }
+    //// Write the vertex uv coordinates
+    //if (uvs)
+    //{
+    //    for (py::ssize_t v = 0; v < (*uvs).shape(0); ++v)
+    //    {
+    //        float const* uv = (*uvs).data(v, 0);
+    //        file << "vt " << uv[0] << " " << uv[1] << std::endl;
+    //    }
+    //}
 
-    if (indices)
-    {
-        std::function<std::string(size_t)> formatFace = [](size_t index) { return std::to_string(index); };
+    //if (indices)
+    //{
+    //    std::function<std::string(size_t)> formatFace = [](size_t index) { return std::to_string(index); };
 
-        if (normals && uvs)
-        {
-            formatFace = [](size_t index) { return std::to_string(index) + "/" + std::to_string(index) + "/" + std::to_string(index); };
-        }
-        else if (normals)
-        {
-            formatFace = [](size_t index) { return std::to_string(index) + "//" + std::to_string(index); };
-        }
-        else if (uvs)
-        {
-            formatFace = [](size_t index) { return std::to_string(index) + "/" + std::to_string(index); };
-        }
+    //    if (normals && uvs)
+    //    {
+    //        formatFace = [](size_t index) { return std::to_string(index) + "/" + std::to_string(index) + "/" + std::to_string(index); };
+    //    }
+    //    else if (normals)
+    //    {
+    //        formatFace = [](size_t index) { return std::to_string(index) + "//" + std::to_string(index); };
+    //    }
+    //    else if (uvs)
+    //    {
+    //        formatFace = [](size_t index) { return std::to_string(index) + "/" + std::to_string(index); };
+    //    }
 
-        // Write the faces
-        for (py::ssize_t f = 0; f < (*indices).shape(0); ++f)
-        {
-            std::uint32_t const* face = (*indices).data(f, 0);
+    //    // Write the faces
+    //    for (py::ssize_t f = 0; f < (*indices).shape(0); ++f)
+    //    {
+    //        std::uint32_t const* face = (*indices).data(f, 0);
 
-            file << "f " << formatFace(static_cast<size_t>(face[0]) + 1) << " " << formatFace(static_cast<size_t>(face[1]) + 1) << " " << formatFace(static_cast<size_t>(face[2]) + 1) << std::endl;
-        }
-    }
+    //        file << "f " << formatFace(static_cast<size_t>(face[0]) + 1) << " " << formatFace(static_cast<size_t>(face[1]) + 1) << " " << formatFace(static_cast<size_t>(face[2]) + 1) << std::endl;
+    //    }
+    //}
 }
 
-PYBIND11_MODULE(xatlas, m)
+NB_MODULE(xatlas, m)
 {
     // Bindings
     ChartOptions::bind(m);
@@ -145,14 +143,14 @@ PYBIND11_MODULE(xatlas, m)
     Atlas::bind(m);
 
     // Convenience functions
-    m.def("parametrize", &parametrize, py::arg("positions"), py::arg("indices"), py::arg("normals") = std::nullopt, py::arg("uvs") = std::nullopt);
+    m.def("parametrize", &parametrize, nb::arg("positions"), nb::arg("indices"), nb::arg("normals") = std::nullopt, nb::arg("uvs") = std::nullopt);
 
     // I/O functions
-    m.def("export", &exportObj, py::arg("path"), py::arg("positions"), py::arg("indices") = std::nullopt, py::arg("uvs") = std::nullopt, py::arg("normals") = std::nullopt);
+    m.def("export", &exportObj, nb::arg("path"), nb::arg("positions"), nb::arg("indices") = std::nullopt, nb::arg("uvs") = std::nullopt, nb::arg("normals") = std::nullopt);
 
-#ifdef VERSION_INFO
-    m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
-#else
-    m.attr("__version__") = "dev";
-#endif
+//#ifdef VERSION_INFO
+//    m.attr("__version__") = MACRO_STRINGIFY(VERSION_INFO);
+//#else
+//    m.attr("__version__") = "dev";
+//#endif
 }

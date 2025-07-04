@@ -24,16 +24,16 @@
 
 #pragma once
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 class ChartOptions
 {
 public:
-    static void bind(pybind11::module& m);
+    static void bind(nanobind::module_& m);
 };
 
 class PackOptions
 {
 public:
-    static void bind(pybind11::module& m);
+    static void bind(nanobind::module_& m);
 };

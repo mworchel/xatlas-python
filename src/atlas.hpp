@@ -26,7 +26,7 @@
 
 #include "utils.hpp"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
 #include <xatlas.h>
 
@@ -34,7 +34,9 @@
 #include <optional>
 #include <tuple>
 
-using MeshResult = std::tuple<pybind11::array_t<std::uint32_t>, pybind11::array_t<std::uint32_t>, pybind11::array_t<float>>;
+using MeshResult = std::tuple<ContiguousArray<std::uint32_t>, 
+                              ContiguousArray<std::uint32_t>, 
+                              ContiguousArray<float>>;
 
 class Atlas
 {
@@ -43,13 +45,13 @@ public:
 
     virtual ~Atlas();
 
-    void addMesh(ContiguousArray<float> const&         positions,
-                 ContiguousArray<std::uint32_t> const& indices,
+    void addMesh(ContiguousArray<float>                positions,
+                 ContiguousArray<std::uint32_t>        indices,
                  std::optional<ContiguousArray<float>> normals = std::nullopt,
                  std::optional<ContiguousArray<float>> uvs     = std::nullopt);
 
-    void addUvMesh(ContiguousArray<float> const&            uvs,
-                   ContiguousArray<std::uint32_t> const&    indices,
+    void addUvMesh(ContiguousArray<float>                   uvs,
+                   ContiguousArray<std::uint32_t>           indices,
                    std::optional<ContiguousArray<uint32_t>> faceMaterials = std::nullopt);
 
     void generate(xatlas::ChartOptions const& chartOptions = xatlas::ChartOptions(), xatlas::PackOptions const& packOptions = xatlas::PackOptions(), bool verbose = false);
@@ -58,9 +60,9 @@ public:
 
     float getUtilization(std::uint32_t index) const;
 
-    pybind11::array_t<std::uint8_t> getChartImage(std::uint32_t index) const;
+    ContiguousArray<std::uint8_t> getChartImage(std::uint32_t index) const;
 
-    static void bind(pybind11::module& m);
+    static void bind(nanobind::module_ &m);
 
 private:
     xatlas::Atlas* m_atlas;

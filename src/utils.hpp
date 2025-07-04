@@ -24,13 +24,25 @@
 
 #pragma once
 
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
+#include <nanobind/ndarray.h>
 
 #include <optional>
 #include <stdexcept>
 
 template<typename T>
-using ContiguousArray = pybind11::array_t<T, pybind11::array::c_style | pybind11::array::forcecast>;
+using ContiguousArray = nanobind::ndarray<T, nanobind::c_contig>;
 
-void checkShape(std::string const& arrayName, pybind11::array array, pybind11::ssize_t expectedLastDimSize, std::optional<pybind11::ssize_t> expectedFirstDimSize = std::nullopt);
+template<typename T>
+void checkShape(std::string const& arrayName, ContiguousArray<T> arr, size_t expectedLastDimSize, std::optional<size_t> expectedFirstDimSize = std::nullopt)
+{
+    if (arr.ndim() != 2 || arr.shape(1) != expectedLastDimSize)
+    {
+        throw std::invalid_argument(arrayName + " array expected to be Nx" + std::to_string(expectedLastDimSize) + ".");
+    }
+
+    if (expectedFirstDimSize && (arr.shape(0) != *expectedFirstDimSize))
+    {
+        throw std::invalid_argument(arrayName + " array has invalid number of elements in the first dimension (expected " + std::to_string(*expectedFirstDimSize) + ", got " + std::to_string(arr.shape(0)) + ")");
+    }
+}
