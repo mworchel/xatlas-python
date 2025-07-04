@@ -34,7 +34,16 @@
 #include <optional>
 #include <tuple>
 
-using MeshResult = std::tuple<pybind11::array_t<std::uint32_t>, pybind11::array_t<std::uint32_t>, pybind11::array_t<float>>;
+using MeshResult = std::tuple<
+    pybind11::array_t<std::uint32_t>, 
+    pybind11::array_t<std::uint32_t>, 
+    pybind11::array_t<float>
+>;
+
+using VertexAssignment = std::tuple<
+    pybind11::array_t<std::uint32_t>, // Atlas index
+    pybind11::array_t<std::uint32_t>  // Chart index
+>;
 
 class Atlas
 {
@@ -55,6 +64,8 @@ public:
     void generate(xatlas::ChartOptions const& chartOptions = xatlas::ChartOptions(), xatlas::PackOptions const& packOptions = xatlas::PackOptions(), bool verbose = false);
 
     MeshResult getMesh(std::uint32_t index) const;
+
+    VertexAssignment getMeshVertexAssignment(std::uint32_t meshIndex) const;
 
     float getUtilization(std::uint32_t index) const;
 

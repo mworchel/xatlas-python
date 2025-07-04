@@ -176,6 +176,29 @@ MeshResult Atlas::getMesh(std::uint32_t index) const
     return std::make_tuple(mapping, indices, uvs);
 }
 
+VertexAssignment Atlas::getMeshVertexAssignment(std::uint32_t meshIndex) const
+{
+    if (meshIndex >= m_atlas->meshCount)
+    {
+        throw std::out_of_range("Mesh index " + std::to_string(meshIndex) + " out of bounds for atlas with " + std::to_string(m_atlas->meshCount) + " meshes.");
+    }
+
+    auto const& mesh = m_atlas->meshes[meshIndex];
+
+    py::array_t<std::uint32_t> atlasIndex(py::array::ShapeContainer{mesh.vertexCount});
+    py::array_t<std::uint32_t> chartIndex(py::array::ShapeContainer{mesh.vertexCount});
+    auto atlasIndex_ = atlasIndex.mutable_unchecked<1>();
+    auto chartIndex_ = chartIndex.mutable_unchecked<1>();
+    for (size_t v = 0; v < static_cast<size_t>(mesh.vertexCount); ++v)
+    {
+        auto const& vertex = mesh.vertexArray[v];
+        atlasIndex_(v) = vertex.atlasIndex;
+        chartIndex_(v) = vertex.chartIndex;
+    }
+
+    return std::make_tuple(atlasIndex, chartIndex);
+}
+
 float Atlas::getUtilization(std::uint32_t index) const
 {
     if (index >= m_atlas->atlasCount)
