@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.15...3.27)
 
+if (NOT DEFINED SKBUILD_PROJECT_VERSION)
+    set(SKBUILD_PROJECT_VERSION "0.0.0")
+endif()
+
 project(xatlas-python LANGUAGES CXX
                       VERSION ${SKBUILD_PROJECT_VERSION})
 
