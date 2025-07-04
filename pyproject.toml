@@ -5,8 +5,8 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "xatlas"
 requires-python = ">=3.8"
-version = "0.0.10"
-authors = [{name = "Markus Worchel", email = "m.worchel@campus.tu-berlin.de"}]
+version = "0.0.11"
+authors = [{name = "Markus Worchel", email = "m.worchel@tu-berlin.de"}]
 license = {file = "LICENSE"}
 description = "Python bindings for xatlas"
 urls = {Homepage = "https://github.com/mworchel/xatlas-python"}
